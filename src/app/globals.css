@@ -17,6 +17,8 @@
 
 :root {
   --nav-height: 4rem;
+  --font-serif: "Instrument Serif";
+  --font-sans: "Instrument Sans Variable";
 }
 
 html {
@@ -74,7 +76,7 @@ html.js .reveal.is-visible {
   gap: 2.5rem 1.75rem;
 }
 
-.wall > figure {
+.wall > * {
   flex-grow: calc(var(--r) * 100);
   flex-basis: calc(var(--r) * var(--row, 20rem));
   min-width: 0;
@@ -84,6 +86,28 @@ html.js .reveal.is-visible {
 .wall-compact {
   --row: 11rem;
   gap: 2rem 1.25rem;
+}
+
+/* Series covers on the Work index and the home page. */
+.wall-index {
+  --row: 15rem;
+  gap: 3rem 2rem;
+}
+
+.wall-feature {
+  --row: 19rem;
+}
+
+/* A short feature row (the home page's four series) is one line from tablet
+   up: flex grow and shrink are both proportional to each ratio, so the covers
+   keep one shared height and fill the measure exactly. */
+@media (min-width: 641px) {
+  .wall-feature {
+    flex-wrap: nowrap;
+  }
+  .wall-feature::after {
+    display: none;
+  }
 }
 
 .wall::after {
@@ -96,7 +120,7 @@ html.js .reveal.is-visible {
   .wall {
     gap: 2.5rem 0;
   }
-  .wall > figure {
+  .wall > * {
     flex-basis: 100%;
   }
   .wall::after {
@@ -105,8 +129,23 @@ html.js .reveal.is-visible {
   .wall-compact {
     gap: 1.5rem 1rem;
   }
-  .wall-compact > figure {
+  .wall-compact > * {
     flex-basis: calc(50% - 0.5rem);
+  }
+  /* Covers stay in justified pairs on phones so the index is scannable. */
+  .wall-index {
+    --row: 8.5rem;
+    gap: 2.25rem 1rem;
+  }
+  .wall-index > * {
+    flex-basis: calc(var(--r) * var(--row));
+  }
+  .wall-index::after {
+    display: block;
+  }
+  /* The home page's four covers fill two rows exactly. */
+  .wall-feature::after {
+    display: none;
   }
 }
 
@@ -114,6 +153,15 @@ html.js .reveal.is-visible {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Home hero painting: as large as the column allows while the whole work and
+   its label stay inside the first screen. Width follows the work's ratio. */
+@media (min-width: 768px) {
+  .hero-frame {
+    width: min(100%, calc((100svh - var(--nav-height) - 9rem) * var(--r)));
+    margin-left: auto;
+  }
 }
 
 /* Lightbox */
@@ -130,8 +178,9 @@ dialog.lightbox {
   overscroll-behavior: contain;
 }
 
+/* Solid ground so nothing from the page ghosts behind the work. */
 dialog.lightbox::backdrop {
-  background: theme("colors.dark / 96%");
+  background: theme("colors.dark");
 }
 
 dialog.lightbox[open] {

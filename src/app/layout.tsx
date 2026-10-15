@@ -1,25 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans, Instrument_Serif } from "next/font/google";
+// Fonts are self-hosted from npm (Fontsource) so builds never depend on
+// reaching Google Fonts and visitors' browsers make no third-party requests.
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource-variable/instrument-sans/wght.css";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import RevealManager from "@/components/RevealManager";
 import { site } from "@/lib/site";
 import { series } from "@/lib/works";
-
-const serif = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const sans = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -35,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const seriesLinks = series.map((s) => ({ href: `/work/${s.slug}`, label: s.title, years: s.years }));
 
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Marks that JavaScript is running before first paint so scroll reveals can hide content safely. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import Wall from "@/components/Wall";
 import { wallItemsFor } from "@/components/wallItems";
 import { pageMetadata } from "@/lib/metadata";
+import { site } from "@/lib/site";
 import { altText, coverOf, getSeries, series, seriesTitle } from "@/lib/works";
 
 type Params = { series: string };
@@ -55,9 +56,9 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
         </p>
       </PageHeader>
 
-      <Wall items={items} label={`${s.title} works`} priorityCount={3} />
+      <Wall items={items} label={`${s.title} works`} priorityCount={3} seriesTitle={s.title} inquireEmail={site.email} />
 
-      <nav aria-label="Other series" className="mt-20 grid gap-6 border-t border-hairline pt-8 sm:grid-cols-2">
+      <nav aria-label="Other series" className="mt-20 grid gap-6 border-t border-hairline pt-8 sm:grid-cols-3 sm:items-baseline">
         <div>
           {previous && (
             <>
@@ -68,6 +69,11 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
             </>
           )}
         </div>
+        <div className="sm:text-center">
+          <Link href="/work" className="inline-flex min-h-11 items-center text-muted underline-offset-4 hover:text-ink hover:underline hover:decoration-accent">
+            All {series.length} series
+          </Link>
+        </div>
         <div className="sm:text-right">
           {next && (
             <>
@@ -77,11 +83,6 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
               </Link>
             </>
           )}
-        </div>
-        <div className="sm:col-span-2">
-          <Link href="/work" className="text-muted underline-offset-4 hover:text-ink hover:underline hover:decoration-accent">
-            All series
-          </Link>
         </div>
       </nav>
     </>

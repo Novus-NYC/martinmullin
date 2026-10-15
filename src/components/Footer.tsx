@@ -41,18 +41,20 @@ export default function Footer() {
         </nav>
       </div>
 
-      <div className="mx-auto flex max-w-wall flex-col gap-2 border-t border-hairline px-5 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <p>
-          &copy; {new Date().getFullYear()} {site.name}. All artwork copyright the artist.
-        </p>
-        <a
-          href={site.credit.href}
-          target="_blank"
-          rel="noreferrer"
-          className="underline-offset-4 hover:text-ink hover:underline hover:decoration-accent"
-        >
-          {site.credit.label}
-        </a>
+      <div className="mx-auto max-w-wall px-5 sm:px-8">
+        <div className="flex flex-col gap-2 border-t border-hairline py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            &copy; {new Date().getFullYear()} {site.name}. All artwork copyright the artist.
+          </p>
+          <a
+            href={site.credit.href}
+            target="_blank"
+            rel="noreferrer"
+            className="underline-offset-4 hover:text-ink hover:underline hover:decoration-accent"
+          >
+            {site.credit.label}
+          </a>
+        </div>
       </div>
     </footer>
   );

@@ -27,16 +27,21 @@ type Props = {
   compact?: boolean;
   /** Mark the first few images as priority when the wall is at the top of the page. */
   priorityCount?: number;
+  /** Series name shown in the viewer's top bar. */
+  seriesTitle?: string;
+  /** When set, the viewer offers an "Inquire about this work" email link. */
+  inquireEmail?: string;
 };
 
 type FigureStyle = CSSProperties & { "--r": string };
 
-export default function Wall({ items, label, compact = false, priorityCount = 0 }: Props) {
+export default function Wall({ items, label, compact = false, priorityCount = 0, seriesTitle, inquireEmail }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const [view, setView] = useState<"primary" | "secondary">("primary");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const open = useCallback((i: number, trigger: HTMLElement) => {
     triggerRef.current = trigger;
@@ -86,6 +91,16 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
       : current
         ? { file: current.item.file, alt: current.item.alt }
         : null;
+
+  const inquiryHref =
+    current && inquireEmail && !current.item.status
+      ? `mailto:${inquireEmail}?subject=${encodeURIComponent(
+          [
+            `Inquiry: ${current.item.title ?? `${seriesTitle ?? "Work"}, ${current.position} of ${items.length}`}`,
+            ...current.item.lines,
+          ].join(". "),
+        )}`
+      : null;
 
   return (
     <>
@@ -145,6 +160,8 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
           <div className="flex h-full flex-col">
             <div className="flex h-16 shrink-0 items-center justify-between px-5 text-sm sm:px-8">
               <p className="text-muted-dark" aria-live="polite">
+                {seriesTitle && <span className="text-canvas">{seriesTitle}</span>}
+                {seriesTitle && <span aria-hidden="true"> &middot; </span>}
                 {current.position} of {items.length}
               </p>
               <button
@@ -157,7 +174,24 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
               </button>
             </div>
 
-            <div className="relative flex min-h-0 flex-1 items-center justify-center px-14 sm:px-20" data-stage>
+            <div
+              className="relative flex min-h-0 flex-1 items-center justify-center px-3 sm:px-20"
+              data-stage
+              onTouchStart={(event) => {
+                const t = event.touches[0];
+                touchStart.current = { x: t.clientX, y: t.clientY };
+              }}
+              onTouchEnd={(event) => {
+                // A horizontal swipe on phones moves to the next or previous work.
+                const start = touchStart.current;
+                touchStart.current = null;
+                if (!start || items.length < 2) return;
+                const t = event.changedTouches[0];
+                const dx = t.clientX - start.x;
+                const dy = t.clientY - start.y;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+              }}
+            >
               <div className="relative h-full w-full" data-stage>
                 <Image key={shownImage.file} src={shownImage.file} alt={shownImage.alt} fill sizes="100vw" className="object-contain" />
               </div>
@@ -167,7 +201,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
                   <button
                     type="button"
                     onClick={() => step(-1)}
-                    className="absolute left-2 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-2xl text-muted-dark hover:text-canvas sm:left-5"
+                    className="absolute left-2 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center text-2xl text-muted-dark hover:text-canvas sm:left-5 sm:inline-flex"
                     aria-label="Previous"
                   >
                     <span aria-hidden="true">&larr;</span>
@@ -175,7 +209,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
                   <button
                     type="button"
                     onClick={() => step(1)}
-                    className="absolute right-2 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-2xl text-muted-dark hover:text-canvas sm:right-5"
+                    className="absolute right-2 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center text-2xl text-muted-dark hover:text-canvas sm:right-5 sm:inline-flex"
                     aria-label="Next"
                   >
                     <span aria-hidden="true">&rarr;</span>
@@ -184,7 +218,18 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
               )}
             </div>
 
-            <div className="flex shrink-0 flex-col gap-3 px-5 pb-6 pt-4 text-sm sm:flex-row sm:items-end sm:justify-between sm:px-8">
+            {items.length > 1 && (
+              <div className="flex shrink-0 justify-between px-3 pt-2 text-sm text-muted-dark sm:hidden">
+                <button type="button" onClick={() => step(-1)} className="inline-flex h-11 items-center px-2">
+                  <span aria-hidden="true">&larr;&nbsp;</span>Previous
+                </button>
+                <button type="button" onClick={() => step(1)} className="inline-flex h-11 items-center px-2">
+                  Next<span aria-hidden="true">&nbsp;&rarr;</span>
+                </button>
+              </div>
+            )}
+
+            <div className="flex shrink-0 flex-col gap-3 px-5 pb-6 pt-2 text-sm sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pt-4">
               <div className="leading-snug text-muted-dark" aria-live="polite">
                 {current.item.title && <p className="font-serif text-lg italic text-canvas">{current.item.title}</p>}
                 {current.item.lines.map((line, j) => (
@@ -192,26 +237,33 @@ export default function Wall({ items, label, compact = false, priorityCount = 0 
                 ))}
                 {current.item.status && <p>{current.item.status}</p>}
               </div>
-              {current.item.secondary && (
-                <div className="flex gap-4 text-muted-dark">
-                  <button
-                    type="button"
-                    onClick={() => setView("primary")}
-                    aria-pressed={view === "primary"}
-                    className={`underline-offset-4 hover:text-canvas ${view === "primary" ? "text-canvas underline decoration-accent" : ""}`}
-                  >
-                    Artwork
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setView("secondary")}
-                    aria-pressed={view === "secondary"}
-                    className={`underline-offset-4 hover:text-canvas ${view === "secondary" ? "text-canvas underline decoration-accent" : ""}`}
-                  >
-                    {current.item.secondary.label}
-                  </button>
-                </div>
-              )}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+                {current.item.secondary && (
+                  <div className="flex gap-4 text-muted-dark">
+                    <button
+                      type="button"
+                      onClick={() => setView("primary")}
+                      aria-pressed={view === "primary"}
+                      className={`inline-flex min-h-11 items-center underline-offset-4 hover:text-canvas ${view === "primary" ? "text-canvas underline decoration-accent" : ""}`}
+                    >
+                      Artwork
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setView("secondary")}
+                      aria-pressed={view === "secondary"}
+                      className={`inline-flex min-h-11 items-center underline-offset-4 hover:text-canvas ${view === "secondary" ? "text-canvas underline decoration-accent" : ""}`}
+                    >
+                      {current.item.secondary.label}
+                    </button>
+                  </div>
+                )}
+                {inquiryHref && (
+                  <a href={inquiryHref} className="inline-flex min-h-11 items-center text-canvas underline decoration-accent underline-offset-4 hover:decoration-canvas">
+                    Inquire about this work
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         )}
