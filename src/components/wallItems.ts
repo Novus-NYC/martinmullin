@@ -11,12 +11,13 @@ export function wallItemsFor(s: Series): WallItem[] {
       width: work.width,
       height: work.height,
       alt: altText(work, s, i),
-      title: work.title ?? (work.year || work.medium || work.dimensions ? null : title),
+      // `title` from labelLines falls back to "Series, n of N" for untitled works. That is a
+      // locator, not a title, so it is used for link names and inquiries but never set in italic.
+      name: title ?? undefined,
+      title: work.title,
       lines,
       status: work.status === "not available" ? "Not available" : undefined,
-      secondary: work.roomView
-        ? { ...work.roomView, label: "Shown in a room" }
-        : undefined,
+      secondary: work.roomView ? { ...work.roomView, label: "Shown in a room" } : undefined,
     };
   });
 }

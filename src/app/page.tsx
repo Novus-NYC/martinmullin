@@ -37,11 +37,11 @@ export default function HomePage() {
   return (
     <>
       {/* Hero: the name and the way in on the left, a recent painting on the right, both in the first screen. */}
-      <section className="grid items-end gap-10 pt-10 md:grid-cols-12 md:gap-10 md:pt-14">
+      <section className="grid items-end gap-10 pt-10 md:grid-cols-12 md:items-center md:gap-10 md:pt-14">
         <div className="reveal md:col-span-5 md:pb-2">
           <p className="text-muted">Painter</p>
           <h1 className="mt-2 font-serif text-[3.25rem] leading-[0.92] tracking-tight sm:text-[4.5rem] lg:text-[6.25rem]">
-            Martin
+            Martin{" "}
             <br />
             Mullin
           </h1>
@@ -70,6 +70,7 @@ export default function HomePage() {
                 width={work.width}
                 height={work.height}
                 sizes="(max-width: 768px) 100vw, 58vw"
+                quality={90}
                 priority
                 className="h-auto w-full"
               />

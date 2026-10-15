@@ -24,6 +24,8 @@ function Section({ id, title, children }: { id: string; title: string; children:
   );
 }
 
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 const letterItems: WallItem[] = referenceLetters.map((scan, i) => ({
   id: `letter-${i + 1}`,
   file: scan.file,
@@ -31,7 +33,7 @@ const letterItems: WallItem[] = referenceLetters.map((scan, i) => ({
   height: scan.height,
   alt: scan.alt,
   title: null,
-  lines: [scan.alt.replace(/^(Handwritten letter|Letter) from /, "")],
+  lines: [capitalize(scan.alt.replace(/^(Handwritten letter|Letter) from /, ""))],
 }));
 
 const catalogItems: WallItem[] = catalogs.map((scan, i) => ({

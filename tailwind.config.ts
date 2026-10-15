@@ -32,6 +32,10 @@ const config: Config = {
         wall: "1320px",
         prose: "65ch",
       },
+      screens: {
+        /** Short viewports such as a phone held in landscape. */
+        short: { raw: "(max-height: 500px)" },
+      },
       transitionDuration: {
         reveal: "500ms",
       },

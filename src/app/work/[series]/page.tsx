@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
+import SeriesName from "@/components/SeriesName";
 import Wall from "@/components/Wall";
 import { wallItemsFor } from "@/components/wallItems";
 import { pageMetadata } from "@/lib/metadata";
@@ -59,30 +60,30 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
       <Wall items={items} label={`${s.title} works`} priorityCount={3} seriesTitle={s.title} inquireEmail={site.email} />
 
       <nav aria-label="Other series" className="mt-20 grid gap-6 border-t border-hairline pt-8 sm:grid-cols-3 sm:items-baseline">
-        <div>
+        <div className={previous ? "" : "hidden sm:block"}>
           {previous && (
             <>
               <p className="text-sm text-muted">Newer</p>
               <Link href={`/work/${previous.slug}`} className="font-serif text-2xl underline-offset-[6px] hover:underline hover:decoration-accent">
-                {seriesTitle(previous)}
+                <SeriesName series={previous} />
               </Link>
             </>
           )}
         </div>
-        <div className="sm:text-center">
-          <Link href="/work" className="inline-flex min-h-11 items-center text-muted underline-offset-4 hover:text-ink hover:underline hover:decoration-accent">
-            All {series.length} series
-          </Link>
-        </div>
-        <div className="sm:text-right">
+        <div className={`sm:text-right ${next ? "" : "hidden sm:block"} sm:order-3`}>
           {next && (
             <>
               <p className="text-sm text-muted">Earlier</p>
               <Link href={`/work/${next.slug}`} className="font-serif text-2xl underline-offset-[6px] hover:underline hover:decoration-accent">
-                {seriesTitle(next)}
+                <SeriesName series={next} />
               </Link>
             </>
           )}
+        </div>
+        <div className="sm:order-2 sm:text-center">
+          <Link href="/work" className="inline-flex min-h-11 items-center text-muted underline-offset-4 hover:text-ink hover:underline hover:decoration-accent">
+            All {series.length} series
+          </Link>
         </div>
       </nav>
     </>

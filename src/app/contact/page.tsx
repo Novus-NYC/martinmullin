@@ -23,28 +23,30 @@ export default function ContactPage() {
       </PageHeader>
 
       <div className="grid gap-12 border-t border-hairline py-12 md:grid-cols-12 md:gap-10 md:py-16">
-        <section className="reveal md:col-span-7" aria-label="Email">
-          <a
-            href={`mailto:${site.email}`}
-            className="break-words font-serif text-[1.75rem] leading-tight underline decoration-hairline underline-offset-[8px] hover:decoration-accent sm:text-4xl md:text-5xl"
-          >
-            {site.email}
-          </a>
-          <p className="mt-6 text-muted">Studio in {site.city}.</p>
-          {site.phone && (
-            <p className="mt-2">
-              <a href={`tel:${site.phone}`}>{site.phone}</a>
-            </p>
-          )}
-          {site.instagram && (
-            <p className="mt-2">
-              <a href={site.instagram} target="_blank" rel="noreferrer">
-                Instagram
-              </a>
-            </p>
-          )}
+        <div className="md:col-span-7">
+          <section className="reveal" aria-label="Email">
+            <a
+              href={`mailto:${site.email}`}
+              className="break-words font-serif text-[1.75rem] leading-tight underline decoration-hairline underline-offset-[8px] hover:decoration-accent sm:text-4xl md:text-5xl"
+            >
+              {site.email}
+            </a>
+            <p className="mt-6 text-muted">Studio in {site.city}.</p>
+            {site.phone && (
+              <p className="mt-2">
+                <a href={`tel:${site.phone}`}>{site.phone}</a>
+              </p>
+            )}
+            {site.instagram && (
+              <p className="mt-2">
+                <a href={site.instagram} target="_blank" rel="noreferrer">
+                  Instagram
+                </a>
+              </p>
+            )}
+          </section>
 
-          <nav aria-labelledby="next-heading" className="mt-16 border-t border-hairline pt-8 md:mt-24">
+          <nav aria-labelledby="next-heading" className="reveal mt-16 border-t border-hairline pt-8 md:mt-24">
             <h2 id="next-heading" className="font-serif text-2xl">
               While you are here
             </h2>
@@ -66,7 +68,7 @@ export default function ContactPage() {
               </li>
             </ul>
           </nav>
-        </section>
+        </div>
 
         {largePaintings && resolute && (
           <figure className="reveal md:col-span-4 md:col-start-9">
@@ -77,6 +79,7 @@ export default function ContactPage() {
                 width={resolute.width}
                 height={resolute.height}
                 sizes="(max-width: 768px) 100vw, 30vw"
+                quality={90}
                 className="h-auto w-full"
               />
             </Link>
@@ -91,7 +94,6 @@ export default function ContactPage() {
           </figure>
         )}
       </div>
-
     </>
   );
 }

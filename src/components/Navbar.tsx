@@ -86,11 +86,15 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
           ref={openButtonRef}
           type="button"
           onClick={openMenu}
-          className="-mr-2 inline-flex h-11 items-center px-2 text-[0.95rem] text-ink md:hidden"
+          className="js-only -mr-2 inline-flex h-11 items-center px-2 text-[0.95rem] text-ink md:hidden"
           aria-haspopup="dialog"
         >
           Menu
         </button>
+        {/* Without JavaScript the menu cannot open, so the same control jumps to the footer's page list. */}
+        <a href="#footer-pages" className="nojs-only -mr-2 inline-flex h-11 items-center px-2 text-[0.95rem] text-ink md:hidden">
+          Menu
+        </a>
       </div>
 
       <dialog
@@ -99,8 +103,8 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
         aria-label="Site menu"
         onClose={() => openButtonRef.current?.focus()}
       >
-        <div className="flex h-full flex-col overflow-y-auto px-5 pb-10">
-          <div className="flex h-16 items-center justify-between">
+        <div className="flex h-full flex-col overflow-y-auto overscroll-contain px-5 pb-10">
+          <div className="flex h-16 shrink-0 items-center justify-between">
             <span className="font-serif text-[1.35rem] leading-none tracking-tight">{site.name}</span>
             <button
               type="button"
@@ -112,7 +116,7 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
             </button>
           </div>
 
-          <nav aria-label="Pages" className="mt-6">
+          <nav aria-label="Pages" className="mt-6 shrink-0">
             <ul className="flex flex-col">
               {[{ href: "/", label: "Home" }, ...site.nav].map((item) => (
                 <li key={item.href} className="border-t border-hairline">
@@ -129,7 +133,7 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
             </ul>
           </nav>
 
-          <nav aria-label="Series" className="mt-10">
+          <nav aria-label="Series" className="mt-10 shrink-0">
             <p className="text-sm text-muted">Series</p>
             <ul className="mt-2 flex flex-col">
               {seriesLinks.map((s) => (
@@ -143,7 +147,7 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
                     }`}
                   >
                     <span>{s.label}</span>
-                    {s.years && <span className="text-sm text-muted">{s.years}</span>}
+                    {s.years && <span className="shrink-0 whitespace-nowrap text-sm text-muted">{s.years}</span>}
                   </Link>
                 </li>
               ))}

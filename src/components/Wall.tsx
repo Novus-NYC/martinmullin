@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 
 /** One item hung on the wall. Plain data so server pages can build it. */
 export type WallItem = {
@@ -10,7 +10,9 @@ export type WallItem = {
   width: number;
   height: number;
   alt: string;
-  /** Title line, shown in serif italic. */
+  /** Short name used for link labels and inquiries, for example the title or "City Works, 2 of 6". */
+  name?: string;
+  /** Title line, shown in serif italic. Only real titles go here. */
   title: string | null;
   /** Supporting lines in order: year, medium, dimensions. */
   lines: string[];
@@ -21,7 +23,7 @@ export type WallItem = {
 
 type Props = {
   items: WallItem[];
-  /** Accessible name for the lightbox dialog, for example "LSABS works". */
+  /** Accessible name for the viewer dialog, for example "LSABS works". */
   label: string;
   /** Smaller rows for documents and scans. */
   compact?: boolean;
@@ -35,16 +37,19 @@ type Props = {
 
 type FigureStyle = CSSProperties & { "--r": string };
 
+/** Quality for artwork in the viewer and on the wall. The sources are already web sized, so keep detail. */
+const ART_QUALITY = 90;
+
 export default function Wall({ items, label, compact = false, priorityCount = 0, seriesTitle, inquireEmail }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const [view, setView] = useState<"primary" | "secondary">("primary");
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
+  const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const lastIndex = useRef<number | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
-  const open = useCallback((i: number, trigger: HTMLElement) => {
-    triggerRef.current = trigger;
+  const open = useCallback((i: number) => {
     setIndex(i);
     setView("primary");
   }, []);
@@ -61,6 +66,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
 
   // Open the native dialog when a work is selected; focus lands on Close.
   useEffect(() => {
+    if (index !== null) lastIndex.current = index;
     const dialog = dialogRef.current;
     if (!dialog) return;
     if (index !== null && !dialog.open) {
@@ -79,53 +85,75 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
     return () => window.removeEventListener("keydown", onKey);
   }, [index, step]);
 
+  // Return focus to the work that was last on view, so keyboard users keep their place.
   const onDialogClose = () => {
     setIndex(null);
-    triggerRef.current?.focus();
+    const last = lastIndex.current;
+    if (last !== null) linkRefs.current[last]?.focus();
   };
 
+  const nameOf = (item: WallItem, i: number) =>
+    item.name ?? item.title ?? (seriesTitle ? `${seriesTitle}, ${i + 1} of ${items.length}` : item.alt);
+
   const current = index === null ? null : { item: items[index], position: index + 1 };
-  const shownImage =
+  const shown =
     current && view === "secondary" && current.item.secondary
-      ? { file: current.item.secondary.file, alt: current.item.secondary.label }
+      ? {
+          file: current.item.secondary.file,
+          width: current.item.secondary.width,
+          height: current.item.secondary.height,
+          alt: `${current.item.alt}, ${current.item.secondary.label.toLowerCase()}`,
+        }
       : current
-        ? { file: current.item.file, alt: current.item.alt }
+        ? { file: current.item.file, width: current.item.width, height: current.item.height, alt: current.item.alt }
         : null;
 
-  const inquiryHref =
-    current && inquireEmail && !current.item.status
-      ? `mailto:${inquireEmail}?subject=${encodeURIComponent(
-          [
-            `Inquiry: ${current.item.title ?? `${seriesTitle ?? "Work"}, ${current.position} of ${items.length}`}`,
-            ...current.item.lines,
-          ].join(". "),
-        )}`
-      : null;
+  const inquiryHref = (() => {
+    if (!current || !inquireEmail || current.item.status) return null;
+    const name = nameOf(current.item, current.position - 1);
+    const subject = [`Inquiry: ${name}`, ...current.item.lines].join(". ");
+    const origin = typeof window === "undefined" ? "" : window.location.origin;
+    const page = typeof window === "undefined" ? "" : window.location.href.split("#")[0];
+    const body = [`Regarding: ${name}`, `Image: ${origin}${current.item.file}`, `Page: ${page}`, "", ""].join("\n");
+    return `mailto:${inquireEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  })();
+
+  const onWorkClick = (event: MouseEvent<HTMLAnchorElement>, i: number) => {
+    // Let modified clicks (new tab, new window, download) open the image file as a normal link.
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    open(i);
+  };
 
   return (
     <>
       <div className={compact ? "wall wall-compact" : "wall"}>
         {items.map((item, i) => {
-          const style: FigureStyle = { "--r": (item.width / item.height).toFixed(4) };
+          const ratio = item.width / item.height;
+          const style: FigureStyle = { "--r": ratio.toFixed(4) };
+          const wide = compact && ratio > 1;
           return (
-            <figure key={item.id} className="reveal" style={style}>
+            <figure key={item.id} className="reveal" style={style} data-wide={wide ? "" : undefined}>
               <a
-                href={item.file}
-                onClick={(event) => {
-                  event.preventDefault();
-                  open(i, event.currentTarget);
+                ref={(el) => {
+                  linkRefs.current[i] = el;
                 }}
+                href={item.file}
+                onClick={(event) => onWorkClick(event, i)}
                 className="block"
-                aria-label={`View ${item.title ?? item.alt} larger`}
+                aria-label={`View larger: ${nameOf(item, i)}`}
               >
                 <Image
                   src={item.file}
                   alt={item.alt}
                   width={item.width}
                   height={item.height}
+                  quality={ART_QUALITY}
                   sizes={
                     compact
-                      ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                      ? wide
+                        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+                        : "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                       : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   }
                   priority={i < priorityCount}
@@ -151,15 +179,15 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
         aria-label={label}
         onClose={onDialogClose}
         onClick={(event) => {
-          // A click on the dark ground (outside any control or the image) closes the view.
+          // A click on the dark ground (anywhere outside the picture and the controls) closes the view.
           const target = event.target as HTMLElement;
           if (target === event.currentTarget || target.dataset.stage !== undefined) close();
         }}
       >
-        {current && shownImage && (
+        {current && shown && (
           <div className="flex h-full flex-col">
-            <div className="flex h-16 shrink-0 items-center justify-between px-5 text-sm sm:px-8">
-              <p className="text-muted-dark" aria-live="polite">
+            <div className="flex h-16 shrink-0 items-center justify-between px-5 text-sm short:h-12 sm:px-8">
+              <p className="text-muted-dark">
                 {seriesTitle && <span className="text-canvas">{seriesTitle}</span>}
                 {seriesTitle && <span aria-hidden="true"> &middot; </span>}
                 {current.position} of {items.length}
@@ -175,7 +203,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
             </div>
 
             <div
-              className="relative flex min-h-0 flex-1 items-center justify-center px-3 sm:px-20"
+              className="relative flex min-h-0 flex-1 px-3 sm:px-20"
               data-stage
               onTouchStart={(event) => {
                 const t = event.touches[0];
@@ -192,8 +220,22 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
                 if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
               }}
             >
-              <div className="relative h-full w-full" data-stage>
-                <Image key={shownImage.file} src={shownImage.file} alt={shownImage.alt} fill sizes="100vw" className="object-contain" />
+              {/* The stage is a size container: the picture is as large as the space allows but never
+                  larger than the source file, so low-resolution scans are not blown up and softened. */}
+              <div className="viewer-stage" data-stage>
+                <Image
+                  key={shown.file}
+                  src={shown.file}
+                  alt={shown.alt}
+                  width={shown.width}
+                  height={shown.height}
+                  quality={ART_QUALITY}
+                  sizes={`(max-width: 640px) 100vw, ${shown.width}px`}
+                  style={{
+                    width: `min(${shown.width}px, 100cqw, calc(100cqh * ${(shown.width / shown.height).toFixed(4)}))`,
+                    height: "auto",
+                  }}
+                />
               </div>
 
               {items.length > 1 && (
@@ -219,7 +261,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
             </div>
 
             {items.length > 1 && (
-              <div className="flex shrink-0 justify-between px-3 pt-2 text-sm text-muted-dark sm:hidden">
+              <div className="flex shrink-0 justify-between px-3 pt-2 text-sm text-muted-dark short:pt-0 sm:hidden">
                 <button type="button" onClick={() => step(-1)} className="inline-flex h-11 items-center px-2">
                   <span aria-hidden="true">&larr;&nbsp;</span>Previous
                 </button>
@@ -229,15 +271,19 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
               </div>
             )}
 
-            <div className="flex shrink-0 flex-col gap-3 px-5 pb-6 pt-2 text-sm sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pt-4">
+            <div className="flex shrink-0 flex-col gap-2 px-5 pb-5 pt-2 text-sm short:flex-row short:items-end short:justify-between short:pb-2 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-6 sm:pt-4">
               <div className="leading-snug text-muted-dark" aria-live="polite">
+                <span className="sr-only">
+                  {current.position} of {items.length}.{" "}
+                </span>
                 {current.item.title && <p className="font-serif text-lg italic text-canvas">{current.item.title}</p>}
+                {!current.item.title && current.item.name && <p className="text-canvas">{current.item.name}</p>}
                 {current.item.lines.map((line, j) => (
                   <p key={j}>{line}</p>
                 ))}
                 {current.item.status && <p>{current.item.status}</p>}
               </div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+              <div className="flex flex-wrap items-center gap-x-6">
                 {current.item.secondary && (
                   <div className="flex gap-4 text-muted-dark">
                     <button
@@ -259,7 +305,10 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
                   </div>
                 )}
                 {inquiryHref && (
-                  <a href={inquiryHref} className="inline-flex min-h-11 items-center text-canvas underline decoration-accent underline-offset-4 hover:decoration-canvas">
+                  <a
+                    href={inquiryHref}
+                    className="inline-flex min-h-11 items-center text-canvas underline decoration-accent underline-offset-4 hover:decoration-canvas"
+                  >
                     Inquire about this work
                   </a>
                 )}

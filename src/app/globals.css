@@ -36,6 +36,18 @@ body {
   background: theme("colors.hairline");
 }
 
+/* Keep the page still behind the open viewer or menu. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Progressive menu: without JavaScript the Menu control is a plain link to
+   the footer navigation; with JavaScript it opens the menu dialog. */
+html.js .nojs-only,
+html:not(.js) .js-only {
+  display: none;
+}
+
 /* Focus: visible everywhere, one treatment. */
 :focus-visible {
   outline: 2px solid theme("colors.accent");
@@ -102,11 +114,21 @@ html.js .reveal.is-visible {
    up: flex grow and shrink are both proportional to each ratio, so the covers
    keep one shared height and fill the measure exactly. */
 @media (min-width: 641px) {
+  .wall-feature::after {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
   .wall-feature {
     flex-wrap: nowrap;
   }
-  .wall-feature::after {
-    display: none;
+}
+
+/* Between phone and tablet the four covers sit in two full rows of two. */
+@media (min-width: 641px) and (max-width: 767px) {
+  .wall-feature {
+    --row: 17rem;
   }
 }
 
@@ -131,6 +153,13 @@ html.js .reveal.is-visible {
   }
   .wall-compact > * {
     flex-basis: calc(50% - 0.5rem);
+  }
+  /* Landscape scans (catalog spreads) need the full width to be legible. */
+  .wall-compact > [data-wide] {
+    flex-basis: 100%;
+  }
+  .wall-compact::after {
+    display: block;
   }
   /* Covers stay in justified pairs on phones so the index is scannable. */
   .wall-index {
@@ -162,6 +191,18 @@ html.js .reveal.is-visible {
     width: min(100%, calc((100svh - var(--nav-height) - 9rem) * var(--r)));
     margin-left: auto;
   }
+}
+
+/* Viewer stage: a size container so the picture can be sized with container
+   units (see Wall.tsx) and never exceeds its source resolution. */
+.viewer-stage {
+  container-type: size;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Lightbox */

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
-import { series, seriesTitle } from "@/lib/works";
+import SeriesName from "@/components/SeriesName";
+import { series } from "@/lib/works";
 
 export default function Footer() {
   return (
     <footer className="mt-24 border-t border-hairline">
       <div className="mx-auto grid max-w-wall gap-10 px-5 py-14 sm:px-8 md:grid-cols-12">
-        <div className="md:col-span-4">
+        <div className="md:col-span-4 lg:col-span-4">
           <p className="font-serif text-2xl leading-none">{site.name}</p>
           <p className="mt-3 max-w-xs text-sm text-muted">{site.tagline}</p>
           <a href={`mailto:${site.email}`} className="mt-4 inline-block text-sm underline-offset-4 hover:underline hover:decoration-accent">
@@ -14,7 +15,7 @@ export default function Footer() {
           </a>
         </div>
 
-        <nav aria-label="Footer pages" className="md:col-span-3">
+        <nav id="footer-pages" aria-label="Footer pages" className="md:col-span-2 lg:col-span-3">
           <p className="text-sm text-muted">Pages</p>
           <ul className="mt-3 flex flex-col gap-2 text-sm">
             {[{ href: "/", label: "Home" }, ...site.nav].map((item) => (
@@ -27,13 +28,13 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <nav aria-label="Footer series" className="md:col-span-5">
+        <nav aria-label="Footer series" className="md:col-span-6 lg:col-span-5">
           <p className="text-sm text-muted">Series</p>
-          <ul className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+          <ul className="mt-3 grid grid-cols-1 gap-x-6 gap-y-2 text-sm lg:grid-cols-2">
             {series.map((s) => (
               <li key={s.slug}>
                 <Link href={`/work/${s.slug}`} className="underline-offset-4 hover:underline hover:decoration-accent">
-                  {seriesTitle(s)}
+                  <SeriesName series={s} />
                 </Link>
               </li>
             ))}

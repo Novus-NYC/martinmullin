@@ -32,6 +32,7 @@ export default function SeriesWall({ entries, headingLevel = "h2", size = "index
           <li key={s.slug} className="reveal" style={{ "--r": (cover.width / cover.height).toFixed(4) } as React.CSSProperties}>
             <Link href={`/work/${s.slug}`} className="group block">
               <Image
+                quality={90}
                 src={cover.file}
                 alt={altText(cover, s, coverIndex)}
                 width={cover.width}
@@ -42,13 +43,9 @@ export default function SeriesWall({ entries, headingLevel = "h2", size = "index
                 {s.title}
               </Heading>
               <p className="mt-1 text-[0.9rem] text-muted">
-                {s.years && s.years !== s.title && (
-                  <>
-                    <span className="whitespace-nowrap">{s.years}</span>
-                    <span aria-hidden="true"> &middot; </span>
-                  </>
-                )}
+                {s.years && s.years !== s.title && <span className="whitespace-nowrap">{s.years} </span>}
                 <span className="whitespace-nowrap">
+                  {s.years && s.years !== s.title && <span aria-hidden="true">&middot; </span>}
                   {s.works.length} {s.works.length === 1 ? "work" : "works"}
                 </span>
               </p>

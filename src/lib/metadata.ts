@@ -32,7 +32,7 @@ export function pageMetadata({ title, description, path, image = defaultImage }:
       images: [image],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title: fullTitle,
       description,
       images: [image.url],

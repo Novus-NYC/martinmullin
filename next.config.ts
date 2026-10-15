@@ -29,6 +29,8 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [390, 640, 768, 1024, 1280, 1536, 1920],
     imageSizes: [160, 240, 320, 420],
+    // 90 for artwork (the sources are already web sized, so keep surface detail); 75 for everything else.
+    qualities: [75, 90],
   },
   async redirects() {
     return oldRoutes.map(([source, destination]) => ({ source, destination, permanent: true }));
