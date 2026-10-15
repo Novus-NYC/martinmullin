@@ -2,11 +2,157 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  padding: 0;
-  margin: 0;
+/*
+  Art direction: "the wall and the label".
+  The site is a well-lit gallery wall. Work hangs on a neutral ground at its
+  true proportions with a small label beneath. Nothing competes with the
+  paintings.
+
+  Documented exceptions to the Volta Website Build Standard:
+  1. Color: near-neutral palette with one supplemental gold accent, because the
+     artwork supplies the color. (See tailwind.config.ts.)
+  2. Motion: quiet opacity fades only (500 ms, 8 px rise), no signature
+     animation moments, so nothing moves near the paintings.
+*/
+
+:root {
+  --nav-height: 4rem;
 }
 
-* {
-  box-sizing: border-box;
+html {
+  scroll-padding-top: calc(var(--nav-height) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+::selection {
+  background: #e9e4d6;
+}
+
+/* Focus: visible everywhere, one treatment. */
+:focus-visible {
+  outline: 2px solid theme("colors.accent");
+  outline-offset: 3px;
+}
+
+/* Scroll reveals. Elements are hidden only when JavaScript has run
+   (html.js is set by an inline script before first paint), so content stays
+   visible without JavaScript. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 500ms ease-out,
+    transform 500ms ease-out;
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal,
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Justified rows of artwork at true aspect ratios. Each figure's basis and
+   grow factor come from its width/height ratio (set inline as --r), so
+   every row shares one height and no image is cropped or stretched. */
+.wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem 1.75rem;
+}
+
+.wall > figure {
+  flex-grow: calc(var(--r) * 100);
+  flex-basis: calc(var(--r) * 17rem);
+  min-width: 0;
+}
+
+.wall::after {
+  content: "";
+  flex-grow: 1000000;
+  flex-basis: 0;
+}
+
+@media (max-width: 640px) {
+  .wall {
+    gap: 2.5rem 0;
+  }
+  .wall > figure {
+    flex-basis: 100%;
+  }
+  .wall::after {
+    display: none;
+  }
+}
+
+.wall img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Lightbox */
+dialog.lightbox {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100dvh;
+  background: transparent;
+  color: #f6f5f2;
+}
+
+dialog.lightbox::backdrop {
+  background: rgba(17, 17, 17, 0.96);
+}
+
+dialog.lightbox[open] {
+  animation: lightbox-in 200ms ease-out;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.lightbox[open] {
+    animation: none;
+  }
+}
+
+/* Mobile menu dialog */
+dialog.menu {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100dvh;
+  background: theme("colors.canvas");
+  color: theme("colors.ink");
+}
+
+dialog.menu::backdrop {
+  background: transparent;
 }
