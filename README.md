@@ -12,13 +12,13 @@ Portfolio website for Martin Mullin, an Irish-born painter living and working in
 ## Tech stack
 
 - Next.js 16 (App Router), TypeScript, Tailwind CSS 3, `next/image`
-- Fonts: Instrument Serif and Instrument Sans via `next/font/google`
+- Fonts: Instrument Serif and Instrument Sans, self-hosted from npm (Fontsource), so builds never need to reach Google Fonts
 - Hosted on Vercel
 
 ## Project structure
 
 - `src/app` routes: `/`, `/work`, `/work/[series]`, `/biography`, `/cv`, `/contact`, plus icons, sitemap and robots
-- `src/components` Navbar, Footer, Wall (justified rows + lightbox), SeriesIndex, YearList, PageHeader, RevealManager
+- `src/components` Navbar, Footer, Wall (justified rows + viewer with inquiry link), SeriesWall (series covers on one line), YearList, PageHeader, RevealManager
 - `src/lib/site.ts` central site config (name, email, nulls for unknown details)
 - `src/lib/works.ts` every series and work, with the verbatim caption from the old site
 - `src/lib/biography.ts`, `src/lib/cv.ts` transcribed text
