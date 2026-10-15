@@ -31,7 +31,7 @@ const letterItems: WallItem[] = referenceLetters.map((scan, i) => ({
   height: scan.height,
   alt: scan.alt,
   title: null,
-  lines: [`Letter ${i + 1} of ${referenceLetters.length}`],
+  lines: [scan.alt.replace(/^(Handwritten letter|Letter) from /, "")],
 }));
 
 const catalogItems: WallItem[] = catalogs.map((scan, i) => ({
@@ -41,7 +41,7 @@ const catalogItems: WallItem[] = catalogs.map((scan, i) => ({
   height: scan.height,
   alt: scan.alt,
   title: null,
-  lines: [`Catalog ${i + 1} of ${catalogs.length}`],
+  lines: [scan.alt.replace(/^MEET A MUSEUM brochure: /, "")],
 }));
 
 export default function CvPage() {
@@ -59,7 +59,7 @@ export default function CvPage() {
       </PageHeader>
 
       <div className="border-t border-hairline">
-        <Section id="resume" title="1. Résumé">
+        <Section id="resume" title="Résumé">
           <YearList entries={resume} />
           <h3 className="mt-8 text-muted">Education</h3>
           <ul className="mt-2">
@@ -71,15 +71,15 @@ export default function CvPage() {
           </ul>
         </Section>
 
-        <Section id="letters" title="2. Museum directors and curators, letters of reference">
+        <Section id="letters" title="Museum directors and curators, letters of reference">
           <Wall items={letterItems} label="Letters of reference" compact />
         </Section>
 
-        <Section id="catalogs" title="3. A sample of MEET A MUSEUM exhibition catalogs">
+        <Section id="catalogs" title="A sample of MEET A MUSEUM exhibition catalogs">
           <Wall items={catalogItems} label="Exhibition catalogs" compact />
         </Section>
 
-        <Section id="matisse" title="4. Henri Matisse exhibition catalog">
+        <Section id="matisse" title="Henri Matisse exhibition catalog">
           <Image
             src={matisseCatalog.file}
             alt={matisseCatalog.alt}
@@ -131,7 +131,7 @@ export default function CvPage() {
           </ul>
         </Section>
 
-        <Section id="press" title="5. Media coverage of MEET A MUSEUM exhibitions">
+        <Section id="press" title="Media coverage of MEET A MUSEUM exhibitions">
           <ul className="flex flex-col">
             {pressLinks.map((link) => (
               <li key={link.href} className="border-t border-hairline py-3">

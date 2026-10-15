@@ -17,13 +17,21 @@ export default function HomePage() {
   const { series: featuredSeries, work } = featuredWork;
   const featuredIndex = featuredSeries.works.indexOf(work);
   const label = labelLines(work, featuredSeries, featuredIndex);
-  const picks = highlighted.map((slug) => series.find((s) => s.slug === slug)!).filter(Boolean);
+  const picks = highlighted.flatMap((slug) => {
+    const found = series.find((s) => s.slug === slug);
+    return found ? [found] : [];
+  });
 
   return (
     <>
       <section className="reveal pt-14 md:pt-24">
         <h1 className="font-serif text-[3rem] leading-[0.95] tracking-tight sm:text-[4.5rem] md:text-[6rem]">{site.name}</h1>
         <p className="mt-5 max-w-prose text-lg text-muted md:text-xl">{site.tagline}</p>
+        <p className="mt-6">
+          <Link href="/work" className="text-lg underline decoration-hairline underline-offset-[6px] hover:decoration-accent">
+            See the work
+          </Link>
+        </p>
       </section>
 
       <section className="reveal mt-14 md:mt-20" aria-labelledby="featured-heading">
@@ -79,7 +87,7 @@ export default function HomePage() {
         <div className="md:col-span-6 md:col-start-7">
           <Image
             src={site.portrait.file}
-            alt="Martin Mullin at work in his studio, and a portrait of the artist"
+            alt={site.portrait.alt}
             width={site.portrait.width}
             height={site.portrait.height}
             sizes="350px"

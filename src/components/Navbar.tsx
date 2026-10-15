@@ -26,6 +26,18 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
     if (dialog?.open) dialog.close();
   }, [pathname]);
 
+  // The menu is a phone-only control. If the viewport grows past the
+  // breakpoint while it is open (rotation, window resize), close it so the
+  // page does not stay inert behind a hidden modal.
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const onChange = () => {
+      if (query.matches && dialogRef.current?.open) dialogRef.current.close();
+    };
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
+
   const openMenu = () => {
     const dialog = dialogRef.current;
     if (!dialog || dialog.open) return;
@@ -107,6 +119,7 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
                   <Link
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
+                    onClick={closeMenu}
                     className={`block py-4 font-serif text-3xl ${isActive(item.href) ? "text-ink" : "text-ink/80"}`}
                   >
                     {item.label}
@@ -124,6 +137,7 @@ export default function Navbar({ seriesLinks }: { seriesLinks: SeriesLink[] }) {
                   <Link
                     href={s.href}
                     aria-current={pathname === s.href ? "page" : undefined}
+                    onClick={closeMenu}
                     className={`flex items-baseline justify-between gap-4 py-2.5 text-[1.05rem] ${
                       pathname === s.href ? "text-ink underline decoration-accent underline-offset-4" : "text-ink/80"
                     }`}

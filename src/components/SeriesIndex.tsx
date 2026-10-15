@@ -25,7 +25,6 @@ export default function SeriesIndex({ items, headingLevel = "h2" }: Props) {
             <Link
               href={`/work/${s.slug}`}
               className="group grid items-center gap-6 md:grid-cols-12 md:gap-10"
-              aria-label={`${s.title}, ${s.works.length} works`}
             >
               <div className={`md:col-span-5 ${flip ? "md:order-2 md:col-start-8" : ""}`}>
                 <Heading className="font-serif text-3xl leading-tight group-hover:underline group-hover:decoration-accent group-hover:underline-offset-[6px] md:text-4xl">

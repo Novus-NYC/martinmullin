@@ -22,6 +22,7 @@ const config: Config = {
         hairline: "#DDD9D2",
         accent: "#9A7B2F",
         dark: "#111111",
+        "muted-dark": "#BDB9B0",
       },
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],

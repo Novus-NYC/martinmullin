@@ -31,7 +31,7 @@ export default function BiographyPage() {
           <div className="md:col-span-5">
             <Image
               src={site.portrait.file}
-              alt="Martin Mullin at work in his studio, and a portrait of the artist"
+              alt={site.portrait.alt}
               width={site.portrait.width}
               height={site.portrait.height}
               sizes="350px"

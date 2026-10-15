@@ -31,7 +31,7 @@ body {
 }
 
 ::selection {
-  background: #e9e4d6;
+  background: theme("colors.hairline");
 }
 
 /* Focus: visible everywhere, one treatment. */
@@ -76,8 +76,14 @@ html.js .reveal.is-visible {
 
 .wall > figure {
   flex-grow: calc(var(--r) * 100);
-  flex-basis: calc(var(--r) * 17rem);
+  flex-basis: calc(var(--r) * var(--row, 20rem));
   min-width: 0;
+}
+
+/* Smaller rows for documents and scans. */
+.wall-compact {
+  --row: 11rem;
+  gap: 2rem 1.25rem;
 }
 
 .wall::after {
@@ -95,6 +101,12 @@ html.js .reveal.is-visible {
   }
   .wall::after {
     display: none;
+  }
+  .wall-compact {
+    gap: 1.5rem 1rem;
+  }
+  .wall-compact > figure {
+    flex-basis: calc(50% - 0.5rem);
   }
 }
 
@@ -114,11 +126,12 @@ dialog.lightbox {
   width: 100vw;
   height: 100dvh;
   background: transparent;
-  color: #f6f5f2;
+  color: theme("colors.canvas");
+  overscroll-behavior: contain;
 }
 
 dialog.lightbox::backdrop {
-  background: rgba(17, 17, 17, 0.96);
+  background: theme("colors.dark / 96%");
 }
 
 dialog.lightbox[open] {
@@ -151,6 +164,7 @@ dialog.menu {
   height: 100dvh;
   background: theme("colors.canvas");
   color: theme("colors.ink");
+  overscroll-behavior: contain;
 }
 
 dialog.menu::backdrop {

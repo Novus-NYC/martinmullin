@@ -57,20 +57,20 @@ export const resumeEducation = [
 export type Scan = { file: string; width: number; height: number; alt: string };
 
 export const referenceLetters: Scan[] = [
-  { file: "/cv/museum-letters-single.jpeg", width: 617, height: 800, alt: "Letter of reference from the New-York Historical Society, August 16, 2008" },
-  { file: "/cv/museum-letters-single-1.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum director, page 1 of 8" },
-  { file: "/cv/museum-letters-single-2.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum director, page 3 of 8" },
-  { file: "/cv/hand-written-again.jpg", width: 617, height: 800, alt: "Handwritten letter of reference" },
-  { file: "/cv/museum-letters-single-4.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum curator, page 5 of 8" },
-  { file: "/cv/museum-letters-single-5.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum curator, page 6 of 8" },
-  { file: "/cv/museum-letters-single-6.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum director, page 7 of 8" },
-  { file: "/cv/museum-letters-single-7.jpeg", width: 617, height: 800, alt: "Letter of reference from a museum director, page 8 of 8" },
+  { file: "/cv/museum-letters-single.jpeg", width: 617, height: 800, alt: "Letter from Linda S. Ferber, Executive Vice President and Museum Director, New-York Historical Society, August 16, 2008" },
+  { file: "/cv/museum-letters-single-1.jpeg", width: 617, height: 800, alt: "Letter from Joan Rosenbaum, Helen Menschel Goldsmith Director, The Jewish Museum, February 7, 2007" },
+  { file: "/cv/museum-letters-single-2.jpeg", width: 617, height: 800, alt: "Letter from Franklin W. Robinson, The Richard J. Schwartz Director, Herbert F. Johnson Museum of Art, Cornell University, January 16, 2008" },
+  { file: "/cv/hand-written-again.jpg", width: 617, height: 800, alt: "Handwritten letter from the Office of the Director, Wadsworth Atheneum Museum of Art, signed Willard, March 14, 2007" },
+  { file: "/cv/museum-letters-single-4.jpeg", width: 617, height: 800, alt: "Letter from Laurie Norton Moffatt, Director, Norman Rockwell Museum, May 14, 2008" },
+  { file: "/cv/museum-letters-single-5.jpeg", width: 617, height: 800, alt: "Letter from Barbara Rose, Consultant for International Exhibitions, Institut Valencia d’Art Modern, June 2, 2008" },
+  { file: "/cv/museum-letters-single-6.jpeg", width: 617, height: 800, alt: "Letter from Alessandra Carnielli, Executive Director, Pierre and Tana Matisse Foundation, September 23, 2008" },
+  { file: "/cv/museum-letters-single-7.jpeg", width: 617, height: 800, alt: "Letter from Thalia Vrachopoulos, Associate Professor, Art and Music Department, John Jay College of Criminal Justice, December 17, 2008" },
 ];
 
 export const catalogs: Scan[] = [
-  { file: "/cv/alex-katz_1.jpg", width: 1100, height: 623, alt: "MEET A MUSEUM catalog: Alex Katz, Early Paintings, The Farnsworth Art Museum, March 15 to May 4, 2007" },
-  { file: "/cv/andy-worhal.jpg", width: 1100, height: 618, alt: "MEET A MUSEUM catalog: Andy Warhol exhibition" },
-  { file: "/cv/norman-rockwell.jpg", width: 1100, height: 637, alt: "MEET A MUSEUM catalog: Norman Rockwell exhibition" },
+  { file: "/cv/alex-katz_1.jpg", width: 1100, height: 623, alt: "MEET A MUSEUM brochure: Alex Katz, Early Paintings, The Farnsworth Art Museum, March 15 to May 4, 2007, The Gallery at the Park Avenue Bank" },
+  { file: "/cv/andy-worhal.jpg", width: 1100, height: 618, alt: "MEET A MUSEUM brochure: Andy Warhol, Ten Portraits of Jews of the Twentieth Century, The Jewish Museum, January 18 to March 2, 2007, The Gallery at the Park Avenue Bank" },
+  { file: "/cv/norman-rockwell.jpg", width: 1100, height: 637, alt: "MEET A MUSEUM brochure: Norman Rockwell, Drawings for Classic Saturday Evening Post Covers from the Norman Rockwell Museum, April 22 to June 6, 2008, The Gallery at the Park Avenue Bank" },
 ];
 
 export const matisseCatalog: Scan = {

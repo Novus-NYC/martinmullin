@@ -230,6 +230,7 @@ export const series: Series[] = [
     years: "2020",
     subtitle: "New paintings on paper",
     statement: [],
+    // Verbatim from the old page: "Acrylic/ Watercolor /Silver/ Resin/ Paper".
     detail: "Acrylic, watercolor, silver, resin, paper",
     coverIndex: 0,
     works: autumn_works_2020,
@@ -239,6 +240,7 @@ export const series: Series[] = [
     title: "Golden Books",
     years: "2012-2018",
     subtitle: null,
+    // The old page says "22 Karat Gold" here while several captions say "23K". Both kept as written.
     statement: [
       "Evoking literature, architecture and music.",
       "22 Karat Gold with oil, acrylic and flashe paint on wood panel.",
@@ -335,7 +337,7 @@ export const series: Series[] = [
   },
 ];
 
-export const featuredWork = { series: series[0], work: series[0].works[14] };
+export const featuredWork = { series: series[0], work: coverOf(series[0]) };
 
 export function getSeries(slug: string): Series | undefined {
   return series.find((s) => s.slug === slug);
@@ -352,11 +354,7 @@ export function seriesTitle(s: Series): string {
 /** Lines for a wall label, in order. Never invents a title. */
 export function labelLines(work: Work, s: Series, index: number): { title: string | null; lines: string[] } {
   const lines: string[] = [];
-  if (work.title) {
-    if (work.year) lines.push(work.year);
-  } else if (work.year) {
-    lines.push(work.year);
-  }
+  if (work.year) lines.push(work.year);
   if (work.medium) lines.push(work.medium);
   if (work.dimensions) lines.push(work.dimensions);
   if (!work.title && !work.medium && !work.dimensions && s.detail) lines.push(s.detail);

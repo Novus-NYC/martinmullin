@@ -1,62 +1,51 @@
-# Purpose
-This repository is the base template that should be used for all future businesses, including basic files such as navbar, footer, and other configs.
+# Martin Mullin
 
-# Business Name
+Portfolio website for Martin Mullin, an Irish-born painter living and working in New York City. Built by Novus (Volta NYC) as a replacement for the previous Weebly site at www.martinmullin.com.
 
-Replace this README with business-specific details.
+## Overview
 
----
+- Every artwork from the previous site, 124 works in 11 series, at the largest size the old host served, shown at true proportions with a label (title, year, medium, dimensions).
+- A keyboard-accessible lightbox on every series page (Enter opens, arrow keys move, Escape closes and returns focus).
+- Biography (exhibitions, collections, activities, bibliography) and CV (résumé, letters of reference, catalogs, press) carried over word for word, with the original PDFs downloadable.
+- Permanent redirects from every old `.html` URL to the new routes.
 
-## 🚀 Overview
+## Tech stack
 
-Short description of the business and what this website is for.
-
-Example:
-"This website serves as the official online presence for [Business Name], showcasing services, contact information, and brand identity."
-
----
-
-## 🛠 Tech Stack
-
-- Next.js (App Router)
-- TypeScript
-- Tailwind CSS
+- Next.js 16 (App Router), TypeScript, Tailwind CSS 3, `next/image`
+- Fonts: Instrument Serif and Instrument Sans via `next/font/google`
 - Hosted on Vercel
 
----
+## Project structure
 
-## 📂 Project Structure
+- `src/app` routes: `/`, `/work`, `/work/[series]`, `/biography`, `/cv`, `/contact`, plus icons, sitemap and robots
+- `src/components` Navbar, Footer, Wall (justified rows + lightbox), SeriesIndex, YearList, PageHeader, RevealManager
+- `src/lib/site.ts` central site config (name, email, nulls for unknown details)
+- `src/lib/works.ts` every series and work, with the verbatim caption from the old site
+- `src/lib/biography.ts`, `src/lib/cv.ts` transcribed text
+- `src/lib/metadata.ts` per-route metadata helper
+- `public/art/<series>` original image files, untouched
+- `public/cv`, `public/documents` scans and PDFs
 
-- `src/app` → App Router (homepage, layout, globals)
-- `src/app/pages` → Site pages (About, Contact, etc.)
-- `src/lib/components` → Shared UI components (Navbar/Footer)
-- `public` → Static assets
-
----
-
-## 🧑‍💻 Development
-
-Install dependencies:
+## Development
 
 ```bash
 npm install
-npm install --save-dev @types/react
-```
-
-Run locally:
-
-```bash
 npm run dev
+npm run build
+npm run lint
+npm run typecheck
 ```
 
----
+## Design notes
 
-## ✏️ Customization Checklist
+Art direction is "the wall and the label": a neutral ground, work at true proportions, a small label beneath. Two documented exceptions to the Volta build standard are recorded in `src/app/globals.css` and `tailwind.config.ts`: a near-neutral palette with one gold accent (the paintings carry the color) and quiet opacity fades only (nothing moves near the artwork).
 
-- [ ] Replace Business Name in navbar + footer
-- [ ] Update metadata in `src/app/layout.tsx`
-- [ ] Replace homepage content (`src/app/page.tsx`)
-- [ ] Update About + Contact pages (`src/app/pages/*`)
-- [ ] Replace favicon + assets in `public/`
-- [ ] Update SEO metadata
-- [ ] (Optional) Update Volta credit link text / URL in the footer
+## Open items for the client
+
+- The old site had a password-protected "Current Work" page that could not be read. Send its content if it should be public.
+- Higher-resolution files are wanted for Works on Paper (about 430 by 576 px), The Stuyvesant-Fish House Paintings (about 430 by 510 px), the Kiefer monotypes (600 px wide) and the portrait (350 px wide).
+- Captions are missing on the old site for two LSABS works (details taken from the image filenames), all six City Works, all twenty Works on Paper and the seven Kiefer prints. Titles and years would complete their labels.
+- Please confirm spellings carried over as written: "Citly Crakle", "Varient", "Deriere L'Etoile", "Bl:Wh'15 36'x30"", "Acqua".
+- Three works are marked "not available" on the old site. Confirm they should stay on view.
+- No phone, studio address, Instagram or other social links were found. They are hidden until supplied (`src/lib/site.ts`).
+- The four Autumn works came with staged room renders. They are shown only as a secondary "Shown in a room" view in the lightbox. Say if they should be removed.

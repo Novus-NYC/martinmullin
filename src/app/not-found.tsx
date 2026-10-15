@@ -1,7 +1,10 @@
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 
-export const metadata = { title: "Page not found | Martin Mullin" };
+export const metadata = {
+  title: "Page not found | Martin Mullin",
+  description: "That page is not on martinmullin.com. See the work, biography, CV or contact pages.",
+};
 
 export default function NotFound() {
   return (
