@@ -75,8 +75,8 @@ export const catalogs: Scan[] = [
 
 export const matisseCatalog: Scan = {
   file: "/cv/screen-shot-2018-10-23-at-3-35-26-pm.png",
-  width: 454,
-  height: 448,
+  width: 497,
+  height: 495,
   alt: "Catalog cover: Henri Matisse, Writers on Paper, Selected Drawings and Prints from the Pierre and Tana Matisse Foundation",
 };
 

@@ -43,7 +43,7 @@ Art direction is "the wall and the label": a neutral ground, work at true propor
 ## Open items for the client
 
 - The old site had a password-protected "Current Work" page that could not be read. Send its content if it should be public.
-- Higher-resolution files are wanted for Works on Paper (about 430 by 576 px), The Stuyvesant-Fish House Paintings (about 430 by 510 px), the Kiefer monotypes (600 px wide) and the portrait (350 px wide).
+- Larger files are wanted for Works on Paper (about 430 by 576 px), The Stuyvesant-Fish House Paintings (about 430 by 510 px), the Kiefer monotypes (600 px wide) and the portrait (350 px wide). The old host holds nothing larger: every image was checked against Weebly's original and resized variants on October 17, 2026, and only the Matisse catalog cover had a bigger original (now in use). New files will have to come from Martin's own photographs or scans.
 - Captions are missing on the old site for two LSABS works (details taken from the image filenames), all six City Works, all twenty Works on Paper and the seven Kiefer prints. Titles and years would complete their labels.
 - Please confirm spellings carried over as written: "Citly Crakle", "Varient", "Deriere L'Etoile", "Bl:Wh'15 36'x30"", "Acqua".
 - Three works are marked "not available" on the old site. Confirm they should stay on view.
