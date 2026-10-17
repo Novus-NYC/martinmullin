@@ -172,7 +172,31 @@ html.js .reveal.is-visible {
   .wall-index::after {
     display: block;
   }
-  /* The home page's four covers fill two rows exactly. */
+  /* The home page's four covers always sit in two rows of two on phones,
+     whatever their shapes: a two-column grid, each cover at its own ratio and
+     sized by its column (the li is an inline-size container), so nothing is
+     cropped and no cover ever stretches to the full width. Bottoms align
+     like works on one shelf. */
+  .wall-feature {
+    --row: 10rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 2rem 1rem;
+  }
+  .wall-feature > * {
+    container-type: inline-size;
+  }
+  .wall-feature > * > a {
+    display: grid;
+    grid-template-rows: var(--row) auto auto;
+  }
+  .wall.wall-feature img {
+    align-self: end;
+    width: auto;
+    max-width: 100%;
+    height: min(var(--row), calc(100cqw / var(--r)));
+  }
   .wall-feature::after {
     display: none;
   }
