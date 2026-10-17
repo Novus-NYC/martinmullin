@@ -57,7 +57,7 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
         </p>
       </PageHeader>
 
-      <Wall items={items} label={`${s.title} works`} priorityCount={3} seriesTitle={s.title} inquireEmail={site.email} />
+      <Wall items={items} label={`${s.title} works`} priorityCount={1} seriesTitle={s.title} inquireEmail={site.email} />
 
       <nav aria-label="Other series" className="mt-20 grid gap-6 border-t border-hairline pt-8 sm:grid-cols-3 sm:items-baseline">
         <div className={previous ? "" : "hidden sm:block"}>

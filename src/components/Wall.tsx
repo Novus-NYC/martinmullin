@@ -27,7 +27,9 @@ type Props = {
   label: string;
   /** Smaller rows for documents and scans. */
   compact?: boolean;
-  /** Mark the first few images as priority when the wall is at the top of the page. */
+  /** Preload the first image(s) when the wall is at the top of the page. Keep this to one on
+      series pages: on a phone only the first work is in view, and preloading more makes them
+      compete with it for bandwidth. */
   priorityCount?: number;
   /** Series name shown in the viewer's top bar. */
   seriesTitle?: string;
@@ -186,7 +188,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
       >
         {current && shown && (
           <div className="flex h-full flex-col">
-            <div className="flex h-16 shrink-0 items-center justify-between px-5 text-sm short:h-12 sm:px-8">
+            <div className="flex h-12 shrink-0 items-center justify-between px-5 text-sm sm:h-16 sm:px-8 short:h-11">
               <p className="text-muted-dark">
                 {seriesTitle && <span className="text-canvas">{seriesTitle}</span>}
                 {seriesTitle && <span aria-hidden="true"> &middot; </span>}
@@ -261,7 +263,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
             </div>
 
             {items.length > 1 && (
-              <div className="flex shrink-0 justify-between px-3 pt-2 text-sm text-muted-dark short:pt-0 sm:hidden">
+              <div className="flex shrink-0 justify-between px-3 text-sm text-muted-dark sm:hidden">
                 <button type="button" onClick={() => step(-1)} className="inline-flex h-11 items-center px-2">
                   <span aria-hidden="true">&larr;&nbsp;</span>Previous
                 </button>
@@ -271,26 +273,31 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
               </div>
             )}
 
-            <div className="flex shrink-0 flex-col gap-2 px-5 pb-5 pt-2 text-sm short:flex-row short:items-end short:justify-between short:pb-2 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-6 sm:pt-4">
-              <div className="leading-snug text-muted-dark" aria-live="polite">
+            {/* Caption and actions. On phones and on short screens (a phone held sideways) the label
+                lines run together on one line so the picture keeps as much height as possible. */}
+            <div className="flex shrink-0 flex-col gap-1 px-5 pb-3 pt-1 text-sm sm:flex-row sm:items-end sm:justify-between sm:gap-2 sm:px-8 sm:pb-6 sm:pt-4 short:flex-row short:items-end short:justify-between short:gap-6 short:pb-2 short:pt-1">
+              <div className="min-w-0 leading-snug text-muted-dark" aria-live="polite">
                 <span className="sr-only">
                   {current.position} of {items.length}.{" "}
                 </span>
-                {current.item.title && <p className="font-serif text-lg italic text-canvas">{current.item.title}</p>}
+                {current.item.title && <p className="font-serif text-[1.05rem] italic text-canvas sm:text-lg">{current.item.title}</p>}
                 {!current.item.title && current.item.name && <p className="text-canvas">{current.item.name}</p>}
-                {current.item.lines.map((line, j) => (
-                  <p key={j}>{line}</p>
-                ))}
-                {current.item.status && <p>{current.item.status}</p>}
+                <p className="sm:hidden short:block">{[...current.item.lines, ...(current.item.status ? [current.item.status] : [])].join(". ")}</p>
+                <div className="hidden sm:block short:hidden">
+                  {current.item.lines.map((line, j) => (
+                    <p key={j}>{line}</p>
+                  ))}
+                  {current.item.status && <p>{current.item.status}</p>}
+                </div>
               </div>
-              <div className="flex flex-wrap items-center gap-x-6">
+              <div className="flex flex-wrap items-center justify-between gap-x-5 sm:shrink-0 sm:justify-end sm:gap-x-6">
                 {current.item.secondary && (
-                  <div className="flex gap-4 text-muted-dark">
+                  <div className="flex gap-3 text-muted-dark sm:gap-4">
                     <button
                       type="button"
                       onClick={() => setView("primary")}
                       aria-pressed={view === "primary"}
-                      className={`inline-flex min-h-11 items-center underline-offset-4 hover:text-canvas ${view === "primary" ? "text-canvas underline decoration-accent" : ""}`}
+                      className={`inline-flex min-h-11 items-center whitespace-nowrap underline-offset-4 hover:text-canvas ${view === "primary" ? "text-canvas underline decoration-accent" : ""}`}
                     >
                       Artwork
                     </button>
@@ -298,7 +305,7 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
                       type="button"
                       onClick={() => setView("secondary")}
                       aria-pressed={view === "secondary"}
-                      className={`inline-flex min-h-11 items-center underline-offset-4 hover:text-canvas ${view === "secondary" ? "text-canvas underline decoration-accent" : ""}`}
+                      className={`inline-flex min-h-11 items-center whitespace-nowrap underline-offset-4 hover:text-canvas ${view === "secondary" ? "text-canvas underline decoration-accent" : ""}`}
                     >
                       {current.item.secondary.label}
                     </button>
@@ -307,9 +314,9 @@ export default function Wall({ items, label, compact = false, priorityCount = 0,
                 {inquiryHref && (
                   <a
                     href={inquiryHref}
-                    className="inline-flex min-h-11 items-center text-canvas underline decoration-accent underline-offset-4 hover:decoration-canvas"
+                    className="inline-flex min-h-11 items-center whitespace-nowrap text-canvas underline decoration-accent underline-offset-4 hover:decoration-canvas"
                   >
-                    Inquire about this work
+                    Inquire<span className="sr-only sm:not-sr-only short:not-sr-only"> about this work</span>
                   </a>
                 )}
               </div>
