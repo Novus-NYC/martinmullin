@@ -1,6 +1,6 @@
 # Martin Mullin
 
-Portfolio website for Martin Mullin, an Irish-born painter living and working in New York City. Built by Novus (Volta NYC) as a replacement for the previous Weebly site at www.martinmullin.com.
+Portfolio website for Martin Mullin, an Irish-born painter living and working in New York City. Built by Novus as a replacement for the previous Weebly site at www.martinmullin.com.
 
 ## Overview
 
@@ -38,7 +38,7 @@ npm run typecheck
 
 ## Design notes
 
-Art direction is "the wall and the label": a neutral ground, work at true proportions, a small label beneath. Two documented exceptions to the Volta build standard are recorded in `src/app/globals.css` and `tailwind.config.ts`: a near-neutral palette with one gold accent (the paintings carry the color) and quiet opacity fades only (nothing moves near the artwork).
+Art direction is "the wall and the label": a neutral ground, work at true proportions, a small label beneath. Two documented exceptions to the Novus build standard are recorded in `src/app/globals.css` and `tailwind.config.ts`: a near-neutral palette with one gold accent (the paintings carry the color) and quiet opacity fades only (nothing moves near the artwork).
 
 ## Open items for the client
 

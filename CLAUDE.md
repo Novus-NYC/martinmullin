@@ -1,4 +1,4 @@
-# Volta Website Build Standard
+# Novus Website Build Standard
 
 This repository is the starting point for bespoke client websites. Every build must feel intentionally art-directed for the particular business, not like a generic AI-generated landing page. `AGENTS.md` and `CLAUDE.md` are canonical mirrors: whenever either file changes, copy the exact same content to the other file in the same change.
 

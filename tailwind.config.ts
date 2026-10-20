@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 /**
  * Design tokens for martinmullin.com.
  *
- * Documented exception to the Volta Website Build Standard ("one or two
+ * Documented exception to the Novus Website Build Standard ("one or two
  * primary colors and one or two supplemental colors"): this is an artist's
  * portfolio and the paintings carry all the color. The palette is therefore
  * near-neutral by design, with a single supplemental gold (lifted from the
